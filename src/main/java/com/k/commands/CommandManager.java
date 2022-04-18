@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CommandManager {
-
+    //test
     private final Set<ICommand> commands = new HashSet<>();
 
     public CommandManager() {
