@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.k.Config;
 import com.k.utilities.APIService;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,13 +22,20 @@ public class MemeCommand implements ICommand {
     }
 
     @Override
+    public String getDescription() {
+        return "retrieves a random meme (source can be optionally provided)";
+    }
+
+    @Override
     public void handle(GuildMessageReceivedEvent event) {
 
         event.getChannel().sendTyping().queue();
         String[] source = parseMessageArgs(event);
-        APIService memeService = new APIService("https://meme-api.herokuapp.com/gimme");
+        APIService memeService = new APIService(Config.get("meme"));
 
-        memeService.sendRequest("ef", false).serveRequest(response -> {
+        memeService.buildURI();
+
+        memeService.sendRequest().serveRequest(response -> {
             try {
                 JsonNode parsedResponse = objectMapper.readTree(response);
 

@@ -11,9 +11,9 @@ public class ReactionHandler {
         registerReactAction(new VoteCaster());
     }
 
-    private final Set<ReactAction> reactActionSet = new HashSet<>();
+    private final Set<IReactAction> reactActionSet = new HashSet<>();
 
-    private ReactAction identifyAction(long identifier) {
+    private IReactAction identifyAction(long identifier) {
         return reactActionSet
                 .stream()
                 .filter(reactAction -> reactAction.getIdentifier().contains(identifier))
@@ -22,8 +22,8 @@ public class ReactionHandler {
     }
 
     public void handle(GuildMessageReactionAddEvent event) {
-//        System.out.println(event.getReaction().getReactionEmote().getEmoji());
-        ReactAction targetAction = identifyAction(event.getMessageIdLong());
+
+        IReactAction targetAction = identifyAction(event.getMessageIdLong());
 
         if (targetAction != null) {
             targetAction.handle(event);
@@ -42,7 +42,7 @@ public class ReactionHandler {
         event.getChannel().sendMessage(sb).queue();
     }
 
-    private void registerReactAction(ReactAction reactAction) {
+    private void registerReactAction(IReactAction reactAction) {
         reactActionSet.add(reactAction);
     }
 

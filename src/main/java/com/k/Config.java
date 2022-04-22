@@ -14,6 +14,8 @@ public class Config {
         return dotenv.get(key.toUpperCase());
     }
 
+
+
     public static void initSlashCommands(CommandListUpdateAction cmdUpdate) {
 
         cmdUpdate.addCommands(new CommandData("poll", "creates a new poll")

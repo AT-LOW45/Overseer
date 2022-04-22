@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class VoteCaster implements ReactAction {
+public class VoteCaster implements IReactAction {
 
     private static GuildMessageReactionAddEvent reactionAddEvent;
 

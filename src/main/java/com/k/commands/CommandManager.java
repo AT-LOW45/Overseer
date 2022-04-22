@@ -9,40 +9,42 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CommandManager {
-    //test
+
     private final Set<ICommand> commands = new HashSet<>();
 
     public CommandManager() {
         registerCommand(new PollCommand());
         registerCommand(new EndPollCommand());
         registerCommand(new MemeCommand(new ObjectMapper()));
+        registerCommand(new HelpCommand(this));
+        registerCommand(new PopCultureTriviaCommand());
     }
 
-    private ICommand findCommand(String name) {
-        return commands.stream()
-                .filter(sCommand -> sCommand.getName().equals(name))
-                .findFirst()
-                .orElse(null);
+    public Optional<ICommand> findCommand(String name) {
+        return Optional.of(commands).get()
+                .stream()
+                .filter(iCommand -> iCommand.getName().equals(name))
+                .findFirst();
+    }
+
+    public Set<ICommand> getRegisteredCommands() {
+        return commands;
     }
 
     public void getSlashCommand(SlashCommandEvent event) {
-        ICommand slashCommand = findCommand(event.getName());
+        Optional<ICommand> slashCommand = findCommand(event.getName());
 
-        if (slashCommand != null) {
-            slashCommand.handle(event);
-        } else {
-            event.reply("Something went wrong. Please try again later").queue();
-        }
+        slashCommand.ifPresentOrElse(iCommand -> iCommand.handle(event),
+                () -> event.reply("Something went wrong").queue());
+
     }
 
     public void getMessageCommand(GuildMessageReceivedEvent event, String command) {
-        ICommand messageCommand = findCommand(command);
+        Optional<ICommand> messageCommand = findCommand(command);
 
-        if(messageCommand != null) {
-            messageCommand.handle(event);
-        } else {
-            event.getChannel().sendMessage("No such command").queue();
-        }
+        messageCommand.ifPresentOrElse(iCommand -> iCommand.handle(event),
+                () -> event.getChannel().sendMessage("Command not registered").queue());
+
     }
 
 

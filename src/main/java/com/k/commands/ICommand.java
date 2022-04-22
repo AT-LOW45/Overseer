@@ -11,6 +11,8 @@ public interface ICommand {
 
     String getName();
 
+    String getDescription();
+
     default void handle(SlashCommandEvent slashCommandEvent) {};
 
     default void handle(GuildMessageReceivedEvent messageReceivedEvent) {};

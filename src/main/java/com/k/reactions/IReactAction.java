@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface ReactAction {
+public interface IReactAction {
 
     void handle(GuildMessageReactionAddEvent reactionAddEvent);
 

@@ -8,11 +8,14 @@ import java.util.concurrent.TimeUnit;
 
 public class PollCommand implements ICommand {
 
-
-
     @Override
     public String getName() {
         return "poll";
+    }
+
+    @Override
+    public String getDescription() {
+        return "starts a poll if there isn't an ongoing one";
     }
 
 

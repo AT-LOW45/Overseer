@@ -13,6 +13,11 @@ public class EndPollCommand implements ICommand {
     }
 
     @Override
+    public String getDescription() {
+        return "closes a poll before the specified duration.";
+    }
+
+    @Override
     public void handle(SlashCommandEvent event) {
         String token = Objects.requireNonNull(event.getOption("polltoken")).getAsString();
 
