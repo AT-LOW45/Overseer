@@ -6,40 +6,44 @@ import lombok.Setter;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @NoArgsConstructor
 @Getter
 @Setter
-public class Trivia <T> implements GameHost<T> {
+public class Trivia <T extends Game> extends Game implements GameHost<T> {
 
-    private T gameType;
+    private T triviaType;
     private Set<String> questions;
-    private User player;
-    private boolean isHosting;
     private String difficulty;
-    private final int allowedIdleTimeInSeconds = 30;
     private final int noOfQuestions = 5;
     private final String questionType = "multiple";
     private final String encoding = "base64";
 
 
-    public Trivia(T gameType, User player) {
-        this.gameType = gameType;
-        this.isHosting = true;
-        this.player = player;
+    public Trivia(T triviaType, User player) {
+        this.triviaType = triviaType;
+        super.player = player;
+        super.isHosting = true;
+        super.allowedIdleTimeInSeconds = 30;
     }
 
-    public Trivia<T> getType() {
+    protected String decode(String toDecode) throws UnsupportedEncodingException {
+        byte[] decoded =  Base64.getDecoder().decode(toDecode);
+        return new String(decoded, StandardCharsets.UTF_8);
+    }
+
+    // get parent class
+    public Trivia<T> getGameType() {
         return this;
     }
 
-    public byte[] decode(String toDecode) {
-        return Base64.getDecoder().decode(toDecode);
-    }
-
-    public T getGameType() {
-        return gameType;
+    // get child class
+    @Override
+    public T getGameSessionType() {
+        return triviaType;
     }
 
     @Override

@@ -20,13 +20,17 @@ public class PopCultureTriviaCommand implements ICommand{
     @Override
     public void handle(GuildMessageReceivedEvent messageReceivedEvent) {
 
-        GameHost<PopCultureTrivia> animeTriviaGameHost = new Trivia<>(new PopCultureTrivia(), messageReceivedEvent.getAuthor());
+        GameHost<PopCultureTrivia> pctGameHost = new Trivia<>(new PopCultureTrivia(), messageReceivedEvent.getAuthor());
         APIService triviaService = new APIService(Config.get("trivia"));
 
-        triviaService.setParam("amount", String.valueOf(animeTriviaGameHost.getGameType().getNoOfQuestions()))
-                .setParam("type", animeTriviaGameHost.getGameType().getQuestionType())
-                .setParam("encode", animeTriviaGameHost.getGameType().getEncoding())
+        triviaService.setParam("amount", String.valueOf(pctGameHost.getGameSessionType().getNoOfQuestions()))
+                .setParam("type", pctGameHost.getGameSessionType().getQuestionType())
+                .setParam("encode", pctGameHost.getGameSessionType().getEncoding())
                 .buildURI();
+
+        pctGameHost.prepareSession(messageReceivedEvent, "test without type");
+        pctGameHost.getGameSessionType().prepareSession(messageReceivedEvent, "test with type");
+
 
 
 

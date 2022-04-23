@@ -1,11 +1,16 @@
 package com.k.entities.game;
 
+import lombok.Getter;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
-public class Adventure <T> implements GameHost<T>{
+@Getter
+public class Adventure <T extends Game> extends Game implements GameHost<T>{
+
+    private final double encounterRate = 20.5;
+
 
     @Override
-    public T getGameType() {
+    public T getGameSessionType() {
         return null;
     }
 

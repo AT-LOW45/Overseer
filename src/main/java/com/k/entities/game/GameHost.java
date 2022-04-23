@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public interface GameHost<T> {
 
-    T getGameType();
+    T getGameSessionType();
 
     void prepareSession(GuildMessageReceivedEvent event, String openingSpeech);
 
