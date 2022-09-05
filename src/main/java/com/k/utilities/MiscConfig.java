@@ -1,5 +1,7 @@
 package com.k.utilities;
 
+import com.k.Activity;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -8,9 +10,9 @@ public class MiscConfig {
 
     private final StringBuilder pollLogSheet = new StringBuilder();
 
-    public static String generateID() {
+    public static String generateID(Activity activityType) {
         UUID newID = UUID.randomUUID();
-        return newID.toString();
+        return activityType.getPrefix() + newID.toString();
     }
 
     public static String setTime(String type) {

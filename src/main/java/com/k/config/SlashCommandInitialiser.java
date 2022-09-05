@@ -1,12 +1,13 @@
-package com.k;
+package com.k.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
+import net.dv8tion.jda.internal.interactions.CommandDataImpl;
 
-public class Config {
+public class SlashCommandInitialiser {
 
     private static final Dotenv dotenv = Dotenv.load();
 
@@ -18,7 +19,7 @@ public class Config {
 
     public static void initSlashCommands(CommandListUpdateAction cmdUpdate) {
 
-        cmdUpdate.addCommands(new CommandData("poll", "creates a new poll")
+        cmdUpdate.addCommands(new CommandDataImpl("poll", "creates a new poll")
                 .addOptions(new OptionData(OptionType.STRING,
                         "title",
                         "the title of the poll")
@@ -53,7 +54,7 @@ public class Config {
                         "a poll option")
                         .setRequired(false))).complete();
 
-        cmdUpdate.addCommands(new CommandData("endpoll", "ends the ongoing poll")
+        cmdUpdate.addCommands(new CommandDataImpl("endpoll", "ends the ongoing poll")
                 .addOptions(new OptionData(
                         OptionType.STRING,
                         "polltoken",

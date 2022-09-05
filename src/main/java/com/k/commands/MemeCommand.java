@@ -1,20 +1,22 @@
 package com.k.commands;
 
-import com.fasterxml.jackson.core.JsonEncoding;
+import java.awt.Color;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.k.Config;
+import com.k.config.SlashCommandInitialiser;
 import com.k.utilities.APIService;
-import lombok.RequiredArgsConstructor;
+
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import java.awt.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-public class MemeCommand implements ICommand {
+//@RequiredArgsConstructor
+@Component
+public class MemeCommand implements IMessageCommand {
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public String getName() {
@@ -27,11 +29,11 @@ public class MemeCommand implements ICommand {
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent event) {
+    public void handle(MessageReceivedEvent event) {
 
         event.getChannel().sendTyping().queue();
         String[] source = parseMessageArgs(event);
-        APIService memeService = new APIService(Config.get("meme"));
+        APIService memeService = new APIService(SlashCommandInitialiser.get("meme"));
 
         memeService.buildURI();
 
@@ -56,7 +58,7 @@ public class MemeCommand implements ICommand {
     }
 
     @Override
-    public String[] parseMessageArgs(GuildMessageReceivedEvent event) {
-        return ICommand.super.parseMessageArgs(event);
+    public String[] parseMessageArgs(MessageReceivedEvent event) {
+        return IMessageCommand.super.parseMessageArgs(event);
     }
 }

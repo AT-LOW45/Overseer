@@ -1,13 +1,13 @@
 package com.k.reactions;
 
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+
 public interface IReactAction {
 
-    void handle(GuildMessageReactionAddEvent reactionAddEvent);
+    void handle(MessageReactionAddEvent reactionAddEvent);
 
     <T> void update(T arg, Consumer<T> updateCallback);
 

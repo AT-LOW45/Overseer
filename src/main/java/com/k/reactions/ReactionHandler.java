@@ -1,9 +1,12 @@
 package com.k.reactions;
 
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import com.k.modules.polly.interactions.VoteCaster;
+
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+
 
 public class ReactionHandler {
 
@@ -21,7 +24,7 @@ public class ReactionHandler {
                 .orElse(null);
     }
 
-    public void handle(GuildMessageReactionAddEvent event) {
+    public void handle(MessageReactionAddEvent event) {
 
         IReactAction targetAction = identifyAction(event.getMessageIdLong());
 
@@ -33,7 +36,7 @@ public class ReactionHandler {
 
     }
 
-    public void reject(GuildMessageReactionAddEvent event) {
+    public void reject(MessageReactionAddEvent event) {
         StringBuilder sb = new StringBuilder();
         sb.append("Reactions added by ")
                 .append(event.getUser().getAsMention())

@@ -1,54 +1,60 @@
 package com.k.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Component
 public class CommandManager {
 
-    private final Set<ICommand> commands = new HashSet<>();
+    private final Set<IMessageCommand> commands;
+    private final Set<ISlashCommand> slashCommands;
 
-    public CommandManager() {
-        registerCommand(new PollCommand());
-        registerCommand(new EndPollCommand());
-        registerCommand(new MemeCommand(new ObjectMapper()));
-        registerCommand(new HelpCommand(this));
-        registerCommand(new PopCultureTriviaCommand());
+    @Autowired
+    public CommandManager(Set<IMessageCommand> commands, Set<ISlashCommand> slashCommands) {
+        this.commands = commands;
+        this.slashCommands = slashCommands;
     }
 
-    public Optional<ICommand> findCommand(String name) {
+    public Optional<IMessageCommand> findMessageCommand(String name) {
         return Optional.of(commands).get()
                 .stream()
                 .filter(iCommand -> iCommand.getName().equals(name))
                 .findFirst();
     }
 
-    public Set<ICommand> getRegisteredCommands() {
-        return commands;
+    public Optional<ISlashCommand> findSlashCommand(String name) {
+        return Optional.of(slashCommands).get()
+                .stream()
+                .filter(iCommand -> iCommand.getName().equals(name))
+                .findFirst();
     }
 
-    public void getSlashCommand(SlashCommandEvent event) {
-        Optional<ICommand> slashCommand = findCommand(event.getName());
+    public Set<IMessageCommand> getRegisteredMessageCommands() {
+        return this.commands;
+    }
+
+    public Set<ISlashCommand> getRegisteredSlashCommands() {
+        return this.slashCommands;
+    }
+
+    public void getSlashCommand(SlashCommandInteractionEvent event) {
+        Optional<ISlashCommand> slashCommand = findSlashCommand(event.getName());
 
         slashCommand.ifPresentOrElse(iCommand -> iCommand.handle(event),
                 () -> event.reply("Something went wrong").queue());
 
     }
 
-    public void getMessageCommand(GuildMessageReceivedEvent event, String command) {
-        Optional<ICommand> messageCommand = findCommand(command);
+    public void getMessageCommand(MessageReceivedEvent event, String command) {
+        Optional<IMessageCommand> messageCommand = findMessageCommand(command);
 
         messageCommand.ifPresentOrElse(iCommand -> iCommand.handle(event),
                 () -> event.getChannel().sendMessage("Command not registered").queue());
 
-    }
-
-
-    private void registerCommand(ICommand slashCommand) {
-        commands.add(slashCommand);
     }
 }

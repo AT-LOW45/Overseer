@@ -1,4 +1,4 @@
-package com.k.entities.polly;
+package com.k.modules.polly;
 
 import net.dv8tion.jda.api.entities.User;
 

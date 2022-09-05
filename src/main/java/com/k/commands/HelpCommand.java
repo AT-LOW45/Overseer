@@ -1,15 +1,26 @@
 package com.k.commands;
 
-import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-public class HelpCommand implements ICommand{
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
-    private final CommandManager commandManager;
+@Component
+public class HelpCommand implements IMessageCommand {
+
+    private final ApplicationContext applicationContext;
     private StringBuilder stringBuilder;
+
+    @Autowired
+    public HelpCommand(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        System.out.println("help");
+    }
 
     @Override
     public String getName() {
@@ -23,16 +34,23 @@ public class HelpCommand implements ICommand{
     }
 
     @Override
-    public void handle(GuildMessageReceivedEvent messageReceivedEvent) {
+    public void handle(MessageReceivedEvent messageReceivedEvent) {
 
         String[] args = parseMessageArgs(messageReceivedEvent);
 
-        if(args.length == 0) {
-
+        if (args.length == 0) {
+            // display help all available commands (message commands + slash commands)
 
         } else {
+            // display help for specified command (if found)
             stringBuilder = new StringBuilder();
-            Optional<ICommand> targetCommand = commandManager.findCommand(args[0]);
+            Optional<IMessageCommand> targetCommand =
+                    applicationContext.getBean(CommandManager.class).findMessageCommand(args[0]);
+
+
+
+            Map<String, String> commandUnion = Map.of();
+
 
             targetCommand.ifPresentOrElse(iCommand -> {
                 stringBuilder.append(iCommand.getName())
@@ -45,7 +63,7 @@ public class HelpCommand implements ICommand{
     }
 
     @Override
-    public String[] parseMessageArgs(GuildMessageReceivedEvent event) {
-        return ICommand.super.parseMessageArgs(event);
+    public String[] parseMessageArgs(MessageReceivedEvent event) {
+        return IMessageCommand.super.parseMessageArgs(event);
     }
 }
