@@ -9,7 +9,7 @@ public abstract class Adventure implements GameHost{
 
     @Override
     public void advance() {
-        // TODO Auto-generated method stub
+
         
     }
 
